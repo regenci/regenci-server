@@ -1,0 +1,130 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         String   @id @default(uuid())
+  profile    Profile? @relation(fields: [profile_id], references: [id])
+  resume     Resume?  @relation(fields: [resume_id], references: [id])
+  updated_at DateTime @updatedAt
+  created_at DateTime @default(now())
+  is_admin   Boolean  @default(false)
+  profile_id String?
+  resume_id  String?
+}
+
+model Profile {
+  id              String   @id @default(uuid())
+  first_name      String
+  last_name       String
+  email_address   String   @unique
+  password        String?
+  password_salt   String?
+  profile_picture String?
+  provider_id     String?
+  provider_name   String?
+  used_templates  String[]
+  User            User[]
+}
+
+model Resume {
+  id                   String       @id @default(uuid())
+  email_address        String?
+  first_name           String?
+  last_name            String?
+  profile_picture      String?
+  job_title            String?
+  phone_number         String?
+  full_address         String?
+  professional_summary String?
+  date_of_birth        DateTime?
+  education            Education[]
+  experience           Experience[]
+  languages            Language[]
+  skills               Skill[]
+  links                Link[]
+  hobbies              Hobby[]
+  references           Reference[]
+  User                 User[]
+}
+
+model Education {
+  id                     String   @id @default(uuid())
+  institution_name       String
+  institution_degree     String
+  institution_start_date DateTime
+  institution_end_date   DateTime
+  Resume                 Resume?  @relation(fields: [resume_id], references: [id])
+  resume_id              String?
+}
+
+model Experience {
+  id                     String   @id @default(uuid())
+  experience_company     String
+  experience_job_title   String
+  experience_start_date  DateTime
+  experience_end_date    DateTime
+  experience_description String?
+  Resume                 Resume?  @relation(fields: [resume_id], references: [id])
+  resume_id              String?
+}
+
+model Language {
+  id             String  @id @default(uuid())
+  language_title String
+  language_level Int     @default(0)
+  Resume         Resume? @relation(fields: [resume_id], references: [id])
+  resume_id      String?
+}
+
+model Skill {
+  id          String  @id @default(uuid())
+  skill_title String
+  skill_level Int?    @default(0)
+  Resume      Resume? @relation(fields: [resume_id], references: [id])
+  resume_id   String?
+}
+
+model Link {
+  id         String  @id @default(uuid())
+  link_title String
+  link_url   String
+  Resume     Resume? @relation(fields: [resume_id], references: [id])
+  resume_id  String?
+}
+
+model Hobby {
+  id          String  @id @default(uuid())
+  hobby_title String
+  Resume      Resume? @relation(fields: [resume_id], references: [id])
+  resume_id   String?
+}
+
+model Reference {
+  id                     String  @id @default(uuid())
+  referent_full_name     String
+  referent_company_name  String
+  referent_phone_number  String
+  referent_email_address String
+  Resume                 Resume? @relation(fields: [resume_id], references: [id])
+  resume_id              String?
+}
+
+// For admin dasbhoard
+
+// A resume template (part of admin dashboard)
+// model Template {
+//   id                String   @id @default(uuid())
+//   title             String
+//   preview_image_url String
+//   jsx_code          String
+//   author_id         String
+//   use_count         Int      @default(0)
+//   updated_at        DateTime @updatedAt
+//   created_at        DateTime @default(now())
+// }
