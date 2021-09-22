@@ -10,7 +10,7 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": "./src/",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -20,7 +20,7 @@
     "noFallthroughCasesInSwitch": false,
     "rootDir": ".",
     "paths": {
-      "@server/*": ["/*"]
+      "@server/*": ["*"]
     }
   }
 }
