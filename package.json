@@ -54,6 +54,6 @@
     "typescript": "^4.3.5"
   },
   "_moduleAliases": {
-    "@server": "dist/*"
+    "@server": "dist/"
   }
 }
