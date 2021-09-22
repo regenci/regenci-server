@@ -1,6 +1,6 @@
-import { AppService } from '@server/services'
-import { Controller, Get } from '@nestjs/common'
 import { RealIP } from 'nestjs-real-ip'
+import { AppService } from '../services'
+import { Controller, Get } from '@nestjs/common'
 
 @Controller()
 export class AppController {
