@@ -7,13 +7,13 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
+    "start": "nest start",
     "lint": "eslint --fix .",
     "prebuild": "rimraf dist",
     "format": "prettier --write .",
     "start:prod": "node dist/main",
     "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start": "node -r ./tsconfig-paths-bootstrap.js dist/main.js"
+    "start:debug": "nest start --debug --watch"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -26,6 +26,7 @@
     "compression": "^1.7.4",
     "helmet": "^4.6.0",
     "hpp": "^0.2.3",
+    "module-alias": "^2.2.2",
     "nestjs-real-ip": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -51,5 +52,8 @@
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.10.1",
     "typescript": "^4.3.5"
+  },
+  "_moduleAliases": {
+    "@server": "dist/*"
   }
 }
