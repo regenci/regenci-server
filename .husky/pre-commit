@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn prebuild && yarn lint && npm run format
+yarn build && yarn lint && npm run format
