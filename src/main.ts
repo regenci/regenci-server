@@ -1,4 +1,3 @@
-require('module-alias/register')
 import hpp from 'hpp'
 import config from './config'
 import helmet from 'helmet'
