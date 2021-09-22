@@ -1,9 +1,9 @@
-import * as hpp from 'hpp'
+import hpp from 'hpp'
 import config from './config'
-import * as helmet from 'helmet'
+import helmet from 'helmet'
 import { is_dev } from './utilities'
 import { AppModule } from './modules'
-import * as compression from 'compression'
+import compression from 'compression'
 import { NestFactory } from '@nestjs/core'
 import { OpticMiddleware } from '@useoptic/express-middleware'
 
