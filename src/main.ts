@@ -1,14 +1,15 @@
 import hpp from 'hpp'
 import config from './config'
-import helmet from 'helmet'
-import { is_dev } from './utilities'
 import { AppModule } from './modules'
-import compression from 'compression'
 import { NestFactory } from '@nestjs/core'
-import { OpticMiddleware } from '@useoptic/express-middleware'
+import { PrismaService } from './services'
+import compression from 'fastify-compress'
+import { fastifyHelmet } from 'fastify-helmet'
+import { ValidationPipe } from '@nestjs/common'
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
 
   // The magic package that prevents frontend developers going nuts
   // Alternate description:
@@ -18,23 +19,24 @@ async function bootstrap() {
   // Express middleware to protect against HTTP Parameter Pollution attacks
   app.use(hpp())
 
-  // Helmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!
-  app.use(helmet())
+  // Helmet helps you secure your Express apps by setting various HTTP headers.
+  app.register(fastifyHelmet)
 
   // Decreases the downloadable amount of data that's served to users.
   // Through the use of this compression, we can improve the performance of our Node api
-  app.use(compression())
+  app.register(compression)
 
-  // API Documentation
-  app.use(
-    OpticMiddleware({
-      enabled: is_dev(),
-    })
-  )
+  // Fixing prisma issue with enableShutdownHooks
+  const prismaService: PrismaService = app.get(PrismaService)
+  prismaService.enableShutdownHooks(app)
 
+  // Setting the global api prefix ex: http://example.com/"prefix/api"
   app.setGlobalPrefix(config().api.prefix)
 
-  await app.listen(config().port, () => {
+  // Automatically validates incoming requests
+  app.useGlobalPipes(new ValidationPipe())
+
+  await app.listen(config().port, '0.0.0.0', () => {
     console.info(`
       ################################################
       🛡️  Server listening on port: ${config().port} 🛡️

@@ -14,8 +14,30 @@ model User {
   updated_at DateTime @updatedAt
   created_at DateTime @default(now())
   is_admin   Boolean  @default(false)
+  logs       Logs[]
   profile_id String?
   resume_id  String?
+}
+
+enum LogActionTypes {
+  login
+  logout
+  signup
+  reset_password
+  added_provider
+  added_password
+  forgot_password
+  removed_password
+}
+
+model Logs {
+  id                String         @id @default(uuid())
+  action_type       LogActionTypes
+  action_date       DateTime       @default(now())
+  action_ip_address String
+  action_location   String
+  User              User?          @relation(fields: [user_id], references: [id])
+  user_id           String?
 }
 
 model Profile {
@@ -115,16 +137,14 @@ model Reference {
   resume_id              String?
 }
 
-// For admin dasbhoard
-
 // A resume template (part of admin dashboard)
-// model Template {
-//   id                String   @id @default(uuid())
-//   title             String
-//   preview_image_url String
-//   jsx_code          String
-//   author_id         String
-//   use_count         Int      @default(0)
-//   updated_at        DateTime @updatedAt
-//   created_at        DateTime @default(now())
-// }
+model Template {
+  id                String   @id @default(uuid())
+  title             String
+  preview_image_url String
+  jsx_code          String
+  author_id         String
+  use_count         Int      @default(0)
+  updated_at        DateTime @updatedAt
+  created_at        DateTime @default(now())
+}
