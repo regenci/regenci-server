@@ -7,13 +7,12 @@ import compression from 'fastify-compress'
 import { fastifyHelmet } from 'fastify-helmet'
 import { ValidationPipe } from '@nestjs/common'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
+import fastifyCookie from 'fastify-cookie'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter())
 
-  // The magic package that prevents frontend developers going nuts
-  // Alternate description:
-  // Enable Cross Origin Resource Sharing to all origins by default
+  // Enables Cross Origin Resource Sharing to the specified array of origins
   app.enableCors({ origin: ['http://localhost:3000', /\.regenci\.online$/], credentials: true })
 
   // Express middleware to protect against HTTP Parameter Pollution attacks
@@ -25,6 +24,11 @@ async function bootstrap() {
   // Decreases the downloadable amount of data that's served to users.
   // Through the use of this compression, we can improve the performance of our Node api
   app.register(compression)
+
+  // cookie parser
+  app.register(fastifyCookie, {
+    secret: config().secrets.cookieParser, // for cookies signature
+  })
 
   // Fixing prisma issue with enableShutdownHooks
   const prismaService: PrismaService = app.get(PrismaService)

@@ -4,6 +4,11 @@ export default () => ({
    */
   port: parseInt(process.env.PORT, 10),
 
+  secrets: {
+    signup: process.env.JWT_SIGNUP_SECRET,
+    cookieParser: process.env.COOKIE_PARSER_SECRET,
+  },
+
   api: {
     prefix: process.env.API_PREFIX,
   },
