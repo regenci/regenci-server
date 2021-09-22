@@ -1,6 +1,6 @@
 {
   "files.exclude": {
-    "**/dist": false,
+    "**/dist": true,
     "**/.git": true,
     "**/.next": true,
     "**/.DS_Store": true,
