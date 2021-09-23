@@ -6,6 +6,8 @@ export default () => ({
 
   secrets: {
     signup: process.env.JWT_SIGNUP_SECRET,
+    signin: process.env.JWT_SIGNIN_SECRET,
+    jwtModule: process.env.JWT_MODULE_SECRET,
     cookieParser: process.env.COOKIE_PARSER_SECRET,
   },
 

@@ -1,24 +1,19 @@
 import config from '../config'
-import { Module } from '@nestjs/common'
-import { APP_GUARD } from '@nestjs/core'
+import { forwardRef, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
+import { ScheduleModule } from '@nestjs/schedule'
+import { AuthModule, UserModule } from '.'
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
-    ThrottlerModule.forRoot({
-      ttl: 10,
-      limit: 3,
-    }),
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    ScheduleModule.forRoot(),
+    forwardRef(() => UserModule),
+    AuthModule,
   ],
   controllers: [],
   exports: [],
 })
 export class CoreModule {}
+// PassportModule,
+//     JwtModule.register({ secret: config().secrets.jwtModule, signOptions: { expiresIn: '60s' } }),

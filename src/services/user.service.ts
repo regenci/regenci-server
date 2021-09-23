@@ -1,8 +1,7 @@
-import { Interval } from '@nestjs/schedule'
+import { Injectable } from '@nestjs/common'
 import { User, Profile } from '@prisma/client'
 import { PrismaService } from './prisma.service'
 import { FindByIdInput, FindByEmailInput } from '../DTO/queries'
-import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { NewUserCredentialsDTO, NewUserProviderInput } from '../DTO/user'
 import { UpdateProfileInput, UpdateProfilePasswordInput } from '../DTO/profile'
 
@@ -98,24 +97,5 @@ export class UserService {
         ...rest,
       },
     })
-  }
-
-  private async getUnactivatedAccounts() {
-    return await this.prisma.user.findMany({
-      where: { is_verified: false, created_at: { gte: new Date(new Date().getTime() + 15 * 60000) } },
-    })
-  }
-
-  // This is a cron job that auto deletes accounts that are not activated after 15 minutes
-  @Interval(10000)
-  async autoDeleteUsers() {
-    try {
-      const users = await this.getUnactivatedAccounts()
-      return users.forEach((user) => {
-        this.prisma.user.delete({ where: { id: user.id } })
-      })
-    } catch (error) {
-      return new InternalServerErrorException(error.message)
-    }
   }
 }

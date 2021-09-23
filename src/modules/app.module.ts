@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common'
-import { CoreModule } from './core.module'
+import { CoreModule } from './index'
+import { forwardRef, Module } from '@nestjs/common'
 import { AppController } from '../controllers'
 import { AppService, PrismaService } from '../services'
 
 @Module({
-  imports: [CoreModule],
+  imports: [forwardRef(() => CoreModule)],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
