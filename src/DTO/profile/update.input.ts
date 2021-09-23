@@ -1,9 +1,9 @@
 import { IsNotEmpty, IsString } from 'class-validator'
 
-export class UpdateProfileInput {
+export class UpdateUserInput {
   @IsNotEmpty()
   @IsString()
-  profile_id: string
+  user_id: string
 
   @IsNotEmpty()
   @IsString()
@@ -18,10 +18,10 @@ export class UpdateProfileInput {
   profile_picture?: string
 }
 
-export class UpdateProfilePasswordInput {
+export class UpdateUserPasswordInput {
   @IsNotEmpty()
   @IsString()
-  profile_id: string
+  user_id: string
 
   @IsNotEmpty()
   @IsString()

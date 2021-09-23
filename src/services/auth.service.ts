@@ -1,34 +1,35 @@
 import config from '../config'
 import { User } from '@prisma/client'
 import { UserService } from './user.service'
-import { CryptographerService } from './index'
 import { LoginUserInput, NewUserCredentialsInput } from '../DTO/user'
-import { Injectable, HttpException, HttpStatus, Inject, forwardRef } from '@nestjs/common'
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common'
+import { AppService } from './app.service'
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private us: UserService,
-    @Inject(forwardRef(() => CryptographerService)) private crypt: CryptographerService
-  ) {}
+  constructor(private us: UserService, private app: AppService) {}
 
   async signUp(input: NewUserCredentialsInput): Promise<User | HttpException> {
     try {
       const { password, ...rest } = input
-      const db_verification_code = this.crypt.totGenerator()
+      const db_verification_code = this.app.totGenerator()
       const user = await this.us.findUserByEmail({ email_address: input.email_address })
 
       if (user)
         throw new HttpException('There is already an account registered with this e-mail address.', HttpStatus.CONFLICT)
 
-      const { hashed, salt } = await this.crypt.hashPassword(password)
+      const { hashed, salt } = await this.app.hashPassword(password)
 
-      return await this.us.newUserCredentials({
+      const created = await this.us.newUserCredentials({
         ...rest,
         password_salt: salt.toString(),
         password: hashed,
         verification_code: db_verification_code,
       })
+      if (created) {
+        await this.app.deleteIfNotActivated(created.id)
+        return created
+      }
     } catch (error) {
       return new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -44,8 +45,7 @@ export class AuthService {
           HttpStatus.NOT_FOUND
         )
 
-      const profile = await this.us.findProfileById({ id: user.profile_id })
-      const matching_pwd = await this.crypt.checkPassword(profile.password, password)
+      const matching_pwd = await this.app.checkPassword(user.password, password)
       if (!matching_pwd) throw new HttpException('Incorrect password, please try again.', HttpStatus.FORBIDDEN)
 
       return user
@@ -57,7 +57,7 @@ export class AuthService {
   async createToken(user: User) {
     return {
       expires_in: '1h',
-      access_token: await this.crypt.jwtSign({ user_id: user.id }, config().secrets.signin, '1h'),
+      access_token: await this.app.jwtSign({ user_id: user.id }, config().secrets.signin, '1h'),
     }
   }
 }

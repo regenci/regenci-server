@@ -4,20 +4,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
-}
-
-model User {
-  id          String   @id @default(uuid())
-  profile     Profile? @relation(fields: [profile_id], references: [id])
-  resume      Resume?  @relation(fields: [resume_id], references: [id])
-  updated_at  DateTime @updatedAt
-  created_at  DateTime @default(now())
-  is_admin    Boolean  @default(false)
-  is_verified Boolean  @unique @default(false)
-  logs        Logs[]
-  profile_id  String?
-  resume_id   String?
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
 }
 
 enum LogActionTypes {
@@ -31,29 +19,49 @@ enum LogActionTypes {
   removed_password
 }
 
+model User {
+  id                String   @id @default(uuid())
+  /// Account first name
+  first_name        String
+  /// Account last name
+  last_name         String
+  /// Account email address
+  email_address     String   @unique
+  /// Account password, optional if registered a provider
+  password          String?
+  /// Account password salt, optional if there is no password
+  password_salt     String?
+  /// Verification code, used to activate account if registered using credentials
+  verification_code Int?
+  /// Account picture, optional if registered using credentials
+  profile_picture   String?
+  /// Provider id, optional if registered using credentials
+  provider_id       String?
+  /// Provider name, optional if registered using credentials
+  provider_name     String?
+  /// Account resume templates used
+  used_templates    String[]
+  /// Account security logs
+  logs              Logs[]
+  /// This relation contains the user data for the resume
+  resume            Resume?  @relation(fields: [resume_id], references: [id])
+  updated_at        DateTime @updatedAt
+  created_at        DateTime @default(now())
+  /// Used to verify if the account has admin role, required only for the admin dashboard
+  is_admin          Boolean  @default(false)
+  /// Used to verify if the account has been activated, required only for credentials signup
+  is_verified       Boolean  @default(false)
+  resume_id         String?
+}
+
 model Logs {
   id                String         @id @default(uuid())
   action_type       LogActionTypes
   action_date       DateTime       @default(now())
   action_ip_address String
   action_location   String
-  User              User?          @relation(fields: [user_id], references: [id])
+  User              User?          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id           String?
-}
-
-model Profile {
-  id                String   @id @default(uuid())
-  first_name        String
-  last_name         String
-  email_address     String   @unique
-  password          String?
-  password_salt     String?
-  verification_code Int?
-  profile_picture   String?
-  provider_id       String?
-  provider_name     String?
-  used_templates    String[]
-  User              User[]
 }
 
 model Resume {
@@ -83,7 +91,7 @@ model Education {
   institution_degree     String
   institution_start_date DateTime
   institution_end_date   DateTime
-  Resume                 Resume?  @relation(fields: [resume_id], references: [id])
+  Resume                 Resume?  @relation(fields: [resume_id], references: [id], onDelete: Cascade)
   resume_id              String?
 }
 
@@ -94,7 +102,7 @@ model Experience {
   experience_start_date  DateTime
   experience_end_date    DateTime
   experience_description String?
-  Resume                 Resume?  @relation(fields: [resume_id], references: [id])
+  Resume                 Resume?  @relation(fields: [resume_id], references: [id], onDelete: Cascade)
   resume_id              String?
 }
 
@@ -102,7 +110,7 @@ model Language {
   id             String  @id @default(uuid())
   language_title String
   language_level Int     @default(0)
-  Resume         Resume? @relation(fields: [resume_id], references: [id])
+  Resume         Resume? @relation(fields: [resume_id], references: [id], onDelete: Cascade)
   resume_id      String?
 }
 
@@ -110,7 +118,7 @@ model Skill {
   id          String  @id @default(uuid())
   skill_title String
   skill_level Int?    @default(0)
-  Resume      Resume? @relation(fields: [resume_id], references: [id])
+  Resume      Resume? @relation(fields: [resume_id], references: [id], onDelete: Cascade)
   resume_id   String?
 }
 
@@ -118,14 +126,14 @@ model Link {
   id         String  @id @default(uuid())
   link_title String
   link_url   String
-  Resume     Resume? @relation(fields: [resume_id], references: [id])
+  Resume     Resume? @relation(fields: [resume_id], references: [id], onDelete: Cascade)
   resume_id  String?
 }
 
 model Hobby {
   id          String  @id @default(uuid())
   hobby_title String
-  Resume      Resume? @relation(fields: [resume_id], references: [id])
+  Resume      Resume? @relation(fields: [resume_id], references: [id], onDelete: Cascade)
   resume_id   String?
 }
 
@@ -135,7 +143,7 @@ model Reference {
   referent_company_name  String
   referent_phone_number  String
   referent_email_address String
-  Resume                 Resume? @relation(fields: [resume_id], references: [id])
+  Resume                 Resume? @relation(fields: [resume_id], references: [id], onDelete: Cascade)
   resume_id              String?
 }
 
