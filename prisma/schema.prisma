@@ -8,7 +8,7 @@ generator client {
   previewFeatures = ["referentialActions"]
 }
 
-enum LogActionTypes {
+enum SecurityLogActionTypes {
   login
   logout
   signup
@@ -20,13 +20,13 @@ enum LogActionTypes {
 }
 
 model User {
-  id                String   @id @default(uuid())
+  id                String        @id @default(uuid())
   /// Account first name
   first_name        String
   /// Account last name
   last_name         String
   /// Account email address
-  email_address     String   @unique
+  email_address     String        @unique
   /// Account password, optional if registered a provider
   password          String?
   /// Account password salt, optional if there is no password
@@ -39,29 +39,31 @@ model User {
   provider_id       String?
   /// Provider name, optional if registered using credentials
   provider_name     String?
+  /// Current template, optional if user has not selected a template
+  current_template  String?
   /// Account resume templates used
   used_templates    String[]
   /// Account security logs
-  logs              Logs[]
+  security_logs     SecurityLog[]
   /// This relation contains the user data for the resume
-  resume            Resume?  @relation(fields: [resume_id], references: [id])
-  updated_at        DateTime @updatedAt
-  created_at        DateTime @default(now())
+  resume            Resume?       @relation(fields: [resume_id], references: [id])
+  updated_at        DateTime      @updatedAt
+  created_at        DateTime      @default(now())
   /// Used to verify if the account has admin role, required only for the admin dashboard
-  is_admin          Boolean  @default(false)
+  is_admin          Boolean       @default(false)
   /// Used to verify if the account has been activated, required only for credentials signup
-  is_verified       Boolean  @default(false)
+  is_verified       Boolean       @default(false)
   resume_id         String?
 }
 
-model Logs {
-  id                String         @id @default(uuid())
-  action_type       LogActionTypes
-  action_date       DateTime       @default(now())
+model SecurityLog {
+  id                String                 @id @default(uuid())
+  action_type       SecurityLogActionTypes
+  action_date       DateTime               @default(now())
   action_ip_address String
   action_city       String
   action_country    String
-  User              User?          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  User              User?                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id           String?
 }
 

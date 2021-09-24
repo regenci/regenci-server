@@ -1,23 +1,27 @@
+import { Request } from 'express'
 import { User } from '@prisma/client'
 import { Strategy } from 'passport-local'
+import { AuthService } from '../components/auth'
 import { PassportStrategy } from '@nestjs/passport'
 import { HttpException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
-import { AuthService } from '../components/auth'
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private as: AuthService) {
     super({
       usernameField: 'email_address',
+      passReqToCallback: true,
     })
   }
 
-  async validate(email_address: string, password: string): Promise<User | HttpException> {
+  async validate(req: Request, email_address: string, password: string): Promise<User | HttpException> {
     try {
-      // const user = await this.as.signIn({ email_address, password })
-      // if (!user) throw new UnauthorizedException()
-
-      return
+      const ip = req.session?.ip_address
+      const user = await this.as.signInWithPassword({ email_address, password }, ip)
+      if (!user) {
+        throw new UnauthorizedException()
+      }
+      return user
     } catch (error) {
       return new InternalServerErrorException(error.message)
     }

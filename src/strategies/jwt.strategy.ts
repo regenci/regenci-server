@@ -1,10 +1,11 @@
 import { Request } from 'express'
 import { User } from '@prisma/client'
+import { JwtPayload } from '../shared'
+import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { UserService } from '../components/user'
 import { PassportStrategy } from '@nestjs/passport'
-import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt'
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { ExtractJwt, Strategy } from 'passport-jwt'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,14 +17,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  async validate(payload: User, done: VerifiedCallback) {
-    try {
-      const user = await this.us.findUserById(payload.id)
-      if (!user) throw new NotFoundException('There is no account registered with this e-mail address.')
-      return done(false, user, null)
-    } catch (error) {
-      return new InternalServerErrorException(error.message)
-    }
+  async validate(payload: JwtPayload): Promise<Partial<User>> {
+    // TODO: implement JWT blacklist
+
+    const { id } = payload
+
+    return await this.us.findUserById(id)
   }
 }
 export function extractJwtFromCookie(req: Request): string {

@@ -1,6 +1,6 @@
 import { SignUpDto } from '../../auth/dto'
-import { LogActionTypes } from '@prisma/client'
 import { IsRequiredWith } from '../../../shared'
+import { SecurityLogDto } from './update-user.dto'
 import { IsNotEmpty, IsNumber } from 'class-validator'
 
 export class CreateUserCredentialsDto extends SignUpDto {
@@ -12,11 +12,5 @@ export class CreateUserCredentialsDto extends SignUpDto {
   @IsNumber()
   verification_code: number
 
-  logs: {
-    action_date: Date
-    action_type: LogActionTypes
-    action_ip_address: string
-    action_city: string
-    action_country: string
-  }
+  security_logs: SecurityLogDto[]
 }

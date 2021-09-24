@@ -16,8 +16,8 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/sign-in')
-  async signIn(@Request() req: RequestWithUser): Promise<void> {
-    return await this.addJwtToCookie(req)
+  async signIn(@Request() req: RequestWithUser, @RealIp() ip: string): Promise<void> {
+    return await this.addJwtToCookie(req, ip)
   }
 
   @Get('/logout')
@@ -32,10 +32,11 @@ export class AuthController {
     return req.user
   }
 
-  private async addJwtToCookie(req: RequestWithUser) {
+  private async addJwtToCookie(req: RequestWithUser, ip: string) {
     try {
       const { access_token } = this.as.generateJwtToken(req.user)
       req.session.jwt = access_token
+      req.session.ip_address = ip
     } catch (err) {
       throw new InternalServerErrorException(err.message, 'Problem with cookie-session middleware?')
     }
