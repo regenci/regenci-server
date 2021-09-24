@@ -59,7 +59,8 @@ model Logs {
   action_type       LogActionTypes
   action_date       DateTime       @default(now())
   action_ip_address String
-  action_location   String
+  action_city       String
+  action_country    String
   User              User?          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id           String?
 }
