@@ -7,12 +7,11 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
-    "start": "nest start",
     "lint": "eslint --fix .",
+    "start": "node dist/main",
     "prebuild": "rimraf dist",
     "dev": "nest start --watch",
-    "format": "prettier --write .",
-    "start:prod": "node dist/main"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

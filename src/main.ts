@@ -1,5 +1,5 @@
-import { AppModule } from '@server/components/app'
 import { NestFactory } from '@nestjs/core'
+import { AppModule } from '@server/components/app'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 
 async function bootstrap() {
