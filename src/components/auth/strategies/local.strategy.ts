@@ -1,7 +1,7 @@
 import { Request } from 'express'
 import { User } from '@prisma/client'
 import { Strategy } from 'passport-local'
-import { AuthService } from '../components/auth'
+import { AuthService } from '../auth.service'
 import { PassportStrategy } from '@nestjs/passport'
 import { HttpException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
 

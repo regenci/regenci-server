@@ -7,7 +7,7 @@ import { SignUpDto, SignInDto, ForgotPasswordDto } from './dto'
 
 @Injectable()
 export class AuthService {
-  constructor(private us: UserService, private readonly jwtService: JwtService) {}
+  constructor(private readonly us: UserService, private readonly jwt: JwtService) {}
 
   async signUpWithPassword(input: SignUpDto, ip: string): Promise<User | HttpException> {
     return await this.us.createWithPassword(input, ip)
@@ -28,7 +28,7 @@ export class AuthService {
       is_verified: data.is_verified,
       email_address: data.email_address,
     }
-    const access_token = this.jwtService.sign(payload)
+    const access_token = this.jwt.sign(payload)
     return { access_token }
   }
 }

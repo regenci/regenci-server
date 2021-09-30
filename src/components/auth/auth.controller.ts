@@ -31,14 +31,4 @@ export class AuthController {
   getProfile(@Request() req) {
     return req.user
   }
-
-  private async addJwtToCookie(req: RequestWithUser, ip: string) {
-    try {
-      const { access_token } = this.as.generateJwtToken(req.user)
-      req.session.jwt = access_token
-      req.session.ip_address = ip
-    } catch (err) {
-      throw new InternalServerErrorException(err.message, 'Problem with cookie-session middleware?')
-    }
-  }
 }

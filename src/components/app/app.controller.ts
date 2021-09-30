@@ -21,31 +21,4 @@ export class AppController {
   async getMe(@Request() req: RequestWithUser): Promise<User> {
     return await this.userService.findUserById(req.user.id)
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @HttpCode(204)
-  // @Patch('/me')
-  // async updateMe(
-  //   @Request() req: RequestWithUser,
-  //   @Body(
-  //     new ValidationPipe({
-  //       whitelist: true,
-  //       forbidNonWhitelisted: true,
-  //     })
-  //   )
-  //   updateUserInput: any
-  // ): Promise<any> {
-  //   // return await this.userService.updateOne(req.user, updateUserInput)
-  // }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Delete('/me')
-  // async deleteMe(@Request() req: RequestWithUser): Promise<void> {
-  //   return await this.userService.deleteUserById({ id: req.user.id })
-  // }
-
-  // @Post('/activate-account/')
-  // async getVerifyEmail(@Req() code: string): Promise<boolean> {
-  //   return !!(await this.userService.verifyEmailToken(code))
-  // }
 }

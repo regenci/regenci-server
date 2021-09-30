@@ -1,9 +1,9 @@
 import { Request } from 'express'
 import { User } from '@prisma/client'
-import { JwtPayload } from '../shared'
+import { UserService } from '../../user'
 import { Injectable } from '@nestjs/common'
+import { JwtPayload } from '../../../shared'
 import { ConfigService } from '@nestjs/config'
-import { UserService } from '../components/user'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 

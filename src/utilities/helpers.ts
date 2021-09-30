@@ -1,7 +1,7 @@
 import { sign } from 'jsonwebtoken'
-import { SecurityLogDto } from './dto'
 import { ConfigService } from '@nestjs/config'
 import IPinfoWrapper, { IPinfo } from 'node-ipinfo'
+import { SecurityLogDto } from '../components/user/dto'
 import { SecurityLogActionTypes } from '@prisma/client'
 
 const config = new ConfigService()

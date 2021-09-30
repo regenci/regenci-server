@@ -1,4 +1,4 @@
-import { UserService } from '../user'
+import { UserModule } from '../user'
 import { EmailModule } from '../email'
 import { AppService } from './app.service'
 import { ConfigModule } from '@nestjs/config'
@@ -7,14 +7,17 @@ import { AppController } from './app.controller'
 import { ScheduleModule } from '@nestjs/schedule'
 import { forwardRef, Module } from '@nestjs/common'
 import { appConfig, validationSchema } from '../../config'
+import { AuthModule } from '../auth'
 
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [appConfig], validationSchema }),
     ScheduleModule.forRoot(),
-    forwardRef(() => EmailModule),
+    EmailModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UserService, PrismaService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}

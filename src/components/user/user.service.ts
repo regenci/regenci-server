@@ -1,12 +1,12 @@
-import { ForgotPasswordDto, SignInDto, SignUpDto } from '../auth'
 import { User } from '@prisma/client'
-import { CreateUserCredentialsDto, SecurityLogDto, UpdateUserDto } from './dto'
-import { checkPassword, hashPassword } from './password.transformer'
-import { totGenerator, UserLogCreator } from './helpers'
-import { PrismaService } from '../../services/prisma.service'
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { EmailService } from '../email'
+import { ConfigService } from '@nestjs/config'
+import { PrismaService } from '../../services/prisma.service'
+import { ForgotPasswordDto, SignInDto, SignUpDto } from '../auth'
+import { checkPassword, hashPassword } from './password.transformer'
+import { totGenerator, UserLogCreator } from '../../utilities/helpers'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { CreateUserCredentialsDto, SecurityLogDto, UpdateUserDto } from './dto'
 
 @Injectable()
 export class UserService {
@@ -99,24 +99,6 @@ export class UserService {
     }
   }
 
-  // Creates a new account using the provider
-  // async newUserProvider(input: NewUserProviderInput): Promise<User> {
-  //   return await this.prisma.user.create({
-  //     data: {
-  //       ...input,
-  //     },
-  //   })
-  // }
-
-  // // If theres an account registered with credentials, then update profile values
-  // async existingUserProvider(input: NewUserProviderInput): Promise<User> {
-  //   const { email_address, ...rest } = input
-  //   return await this.prisma.user.update({
-  //     where: { email_address },
-  //     data: { ...rest },
-  //   })
-  // }
-
   // Return an array of all the users
   async findAll(): Promise<User[]> {
     return await this.prisma.user.findMany()
@@ -134,12 +116,14 @@ export class UserService {
     })
   }
 
+  // Returns the user with the provided email address
   async findUserByEmail(email_address: string): Promise<User> {
     return await this.prisma.user.findUnique({
       where: { email_address },
     })
   }
 
+  // Updates the user with the provided id
   async updateUserById(id: string, input: UpdateUserDto): Promise<User> {
     return await this.prisma.user.update({
       where: { id },
@@ -148,6 +132,8 @@ export class UserService {
       },
     })
   }
+
+  // Updates the user with the provided id with the provided security_log
   async updateUserLogsById(id: string, input: SecurityLogDto): Promise<User> {
     const logs = await this.prisma.user.findUnique({
       select: { security_logs: true },
@@ -162,16 +148,6 @@ export class UserService {
       },
     })
   }
-
-  // async updateUserById(input: UpdateUserInput): Promise<User> {
-  //   const { user_id, ...rest } = input
-  //   return await this.prisma.user.update({
-  //     where: { id: user_id },
-  //     data: {
-  //       ...rest,
-  //     },
-  //   })
-  // }
 
   // async updateProfilePasswordById(input: UpdateUserPasswordInput): Promise<User> {
   //   const { user_id, ...rest } = input
