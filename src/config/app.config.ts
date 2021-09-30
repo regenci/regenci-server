@@ -3,14 +3,13 @@ export default (): Record<string, unknown> => ({
     devUrl: process.env.DEV_URL,
     prodUrl: process.env.PROD_URL,
     prefix: process.env.API_PREFIX,
+    ipApiKey: process.env.IP_API_KEY,
+    baseUrl: process.env.FRONTEND_BASE_URL,
   },
   env: process.env.NODE_ENV,
   server: {
     port: parseInt(process.env.PORT, 10),
     baseUrl: process.env.BASE_URL,
-  },
-  frontend: {
-    baseUrl: process.env.FRONTEND_BASE_URL,
   },
   cors: {
     // https://github.com/expressjs/cors#configuration-options

@@ -1,7 +1,11 @@
-import geoip from 'geoip-lite'
 import { sign } from 'jsonwebtoken'
 import { SecurityLogDto } from './dto'
+import { ConfigService } from '@nestjs/config'
+import IPinfoWrapper, { IPinfo } from 'node-ipinfo'
 import { SecurityLogActionTypes } from '@prisma/client'
+
+const config = new ConfigService()
+const ipinfoWrapper = new IPinfoWrapper(config.get('api.ipApiKey'))
 
 // This method signs a jwt token with the provided secret, data, and expire date
 export const jwtSign = async (data: any, secret: string, time: string): Promise<string> => {
@@ -16,24 +20,18 @@ export const totGenerator = (): number => {
   return Math.floor(100000 + Math.random() * 900000)
 }
 
-export const IPGeolocator = async (
-  ip: string
-): Promise<{
-  country: string
-  city: string
-  timezone: string
-}> => {
-  const { country, city, timezone } = geoip.lookup(ip)
-  return { country, city, timezone }
+export const IPGeolocator = async (ip: string) => {
+  const { city, timezone, region, country } = await ipinfoWrapper.lookupIp(ip).then((response: IPinfo) => response)
+  return { country, city, timezone, region }
 }
 
 export const UserLogCreator = async (type: SecurityLogActionTypes, ip: string): Promise<SecurityLogDto> => {
-  const { city, country } = await IPGeolocator(ip)
+  const { city, country, region } = await IPGeolocator(ip)
   return {
-    action_city: city,
     action_type: type,
     action_ip_address: ip,
     action_date: new Date(),
     action_country: country,
+    action_city: city ?? region,
   }
 }
