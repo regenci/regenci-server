@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "**/dist": true,
+    "**/.git": true,
+    "**/.next": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true
+  }
+}
