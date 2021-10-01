@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+=======
+>>>>>>> c6990b09180848f81b0c574445877e5d2cb64add
 
 datasource db {
   provider = "postgresql"
@@ -11,9 +14,9 @@ generator client {
 }
 
 model User {
-	id Int @id @default(autoincrement())
-	email String @unique
-	first_name String
-	last_name String
-	password String
+  id         Int    @id @default(autoincrement())
+  email      String @unique
+  first_name String
+  last_name  String
+  password   String
 }
