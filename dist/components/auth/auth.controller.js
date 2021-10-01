@@ -15,13 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("../users/users.service");
+const auth_service_1 = require("./auth.service");
 const local_auth_guard_1 = require("./local-auth.guard");
 let AuthController = class AuthController {
-    constructor(userService) {
+    constructor(userService, authService) {
         this.userService = userService;
+        this.authService = authService;
     }
     async login(req) {
-        return req.user;
+        console.log(req.user);
+        return this.authService.login(req.user);
     }
     async register(req) {
         const user = req.body;
@@ -46,7 +49,7 @@ __decorate([
 ], AuthController.prototype, "register", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
+    __metadata("design:paramtypes", [users_service_1.UsersService, auth_service_1.AuthService])
 ], AuthController);
 exports.AuthController = AuthController;
 //# sourceMappingURL=auth.controller.js.map

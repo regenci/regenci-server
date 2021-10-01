@@ -1,5 +1,5 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common'
-import { LocalAuthGuard } from '../auth/local-auth.guard'
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { AppService } from './app.service'
 
 @Controller()
@@ -11,7 +11,7 @@ export class AppController {
     return this.appService.getHello()
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('test')
   test(@Req() req): string {
     console.log(req.user)
