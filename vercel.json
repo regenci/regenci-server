@@ -12,5 +12,8 @@
       "dest": "dist/main.js",
       "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
     }
-  ]
+  ],
+  "github": {
+    "enabled": true
+  }
 }
