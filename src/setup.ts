@@ -1,4 +1,4 @@
-import * as hpp from 'hpp'
+import hpp from 'hpp'
 import { config } from './config'
 import fastifyCors from 'fastify-cors'
 import fastifyCookie from 'fastify-cookie'
