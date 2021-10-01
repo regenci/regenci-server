@@ -258,6 +258,11 @@
     consola "^2.15.0"
     node-fetch "^2.6.1"
 
+"@prisma/engines@3.1.0-24.c22652b7e418506fab23052d569b85d3aec4883f":
+  version "3.1.0-24.c22652b7e418506fab23052d569b85d3aec4883f"
+  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-3.1.0-24.c22652b7e418506fab23052d569b85d3aec4883f.tgz#7b45708e6a42523dc9bc2214e5c62781f608dc3a"
+  integrity sha512-6NEp0VlLho3hVtIvj2P4h0e19AYqQSXtFGts8gSIXDnV+l5pRFZaDMfGo2RiLMR0Kfrs8c3ZYxYX0sWmVL0tWw==
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.8.tgz#c1e4e80d6f964fbecb3359c43bd48b40f7cadad9"
@@ -2465,6 +2470,13 @@ prettier@^2.3.2:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.4.1.tgz#671e11c89c14a4cfc876ce564106c4a6726c9f5c"
   integrity sha512-9fbDAXSBcc6Bs1mZrDYb3XKzDLm4EXXL9sC1LqKP5rZkT6KRr/rf9amVUcODVXgguK/isJz0d0hP72WeaKWsvA==
+
+prisma@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/prisma/-/prisma-3.1.1.tgz#4c13c35dd3a58af9134008c8ed0fdc21a632802c"
+  integrity sha512-+eZtWIL6hnOKUOvqq9WLBzSw2d/EbTmOx1Td1LI8/0XE40ctXMLG2N1p6NK5/+yivGaoNJ9PDpPsPL9lO4nJrQ==
+  dependencies:
+    "@prisma/engines" "3.1.0-24.c22652b7e418506fab23052d569b85d3aec4883f"
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
