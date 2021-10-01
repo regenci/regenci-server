@@ -6,20 +6,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
-const app_service_1 = require("./app.service");
-const app_controller_1 = require("./app.controller");
-const config_1 = require("@nestjs/config");
-const auth_module_1 = require("../auth/auth.module");
-let AppModule = class AppModule {
+const passport_1 = require("@nestjs/passport");
+const users_module_1 = require("../users/users.module");
+const auth_service_1 = require("./auth.service");
+const local_strategy_1 = require("./local.strategy");
+const auth_controller_1 = require("./auth.controller");
+let AuthModule = class AuthModule {
 };
-AppModule = __decorate([
+AuthModule = __decorate([
     (0, common_1.Module)({
-        imports: [config_1.ConfigModule.forRoot({ cache: true, isGlobal: true, envFilePath: '.env' }), auth_module_1.AuthModule],
-        controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        imports: [users_module_1.UsersModule, passport_1.PassportModule],
+        providers: [auth_service_1.AuthService, local_strategy_1.LocalStrategy],
+        controllers: [auth_controller_1.AuthController],
     })
-], AppModule);
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+], AuthModule);
+exports.AuthModule = AuthModule;
+//# sourceMappingURL=auth.module.js.map
