@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build",
     "lint": "eslint --fix .",
-    "start": "node dist/main",
+    "start": "nest start",
     "prebuild": "rimraf dist",
     "dev": "nest start --watch",
     "format": "prettier --write ."
