@@ -24,7 +24,6 @@ let AppController = class AppController {
         return this.appService.getHello();
     }
     test(req) {
-        console.log(req.user);
         return 'kasdlkasldkk';
     }
 };

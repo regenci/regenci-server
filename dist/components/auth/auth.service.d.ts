@@ -1,12 +1,13 @@
-import { User } from '.prisma/client';
-import { UsersService } from '../users/users.service';
+import { Account } from '.prisma/client';
+import { AccountsService } from '../accounts/accounts.service';
 import { JwtService } from '@nestjs/jwt';
 export declare class AuthService {
-    private usersService;
+    private accountService;
     private jwtService;
-    constructor(usersService: UsersService, jwtService: JwtService);
-    validateUser(email: string, pass: string): Promise<Partial<User>>;
-    login({ id, email }: User): Promise<{
+    constructor(accountService: AccountsService, jwtService: JwtService);
+    validateAccount(email: string, pass: string): Promise<Partial<Account>>;
+    login({ id, email }: Account): Promise<{
         access_token: string;
+        refresh_token: string;
     }>;
 }

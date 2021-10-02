@@ -1,11 +1,16 @@
-import { UsersService } from '../users/users.service';
+import { AccountsService } from '../accounts/accounts.service';
 import { AuthService } from './auth.service';
 export declare class AuthController {
-    private userService;
+    private accountService;
     private authService;
-    constructor(userService: UsersService, authService: AuthService);
+    constructor(accountService: AccountsService, authService: AuthService);
     login(req: any): Promise<{
         access_token: string;
+        refresh_token: string;
+    }>;
+    refreshToken(req: any): Promise<{
+        access_token: string;
+        refresh_token: string;
     }>;
     register(req: any): Promise<{
         msg: string;

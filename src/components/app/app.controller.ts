@@ -14,7 +14,6 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Get('test')
   test(@Req() req): string {
-    console.log(req.user)
     return 'kasdlkasldkk'
   }
 }

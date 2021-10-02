@@ -41,30 +41,31 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const users_service_1 = require("../users/users.service");
+const accounts_service_1 = require("../accounts/accounts.service");
 const argon2 = __importStar(require("argon2"));
 const jwt_1 = require("@nestjs/jwt");
 let AuthService = class AuthService {
-    constructor(usersService, jwtService) {
-        this.usersService = usersService;
+    constructor(accountService, jwtService) {
+        this.accountService = accountService;
         this.jwtService = jwtService;
     }
-    async validateUser(email, pass) {
-        const user = await this.usersService.findOne({ email });
-        if (!user || !argon2.verify(user.password, pass))
+    async validateAccount(email, pass) {
+        const account = await this.accountService.findOne({ email });
+        if (!account || !argon2.verify(account.password, pass))
             return null;
-        const { password } = user, result = __rest(user, ["password"]);
+        const { password } = account, result = __rest(account, ["password"]);
         return result;
     }
     async login({ id, email }) {
         return {
-            access_token: this.jwtService.sign({ id, email }),
+            access_token: this.jwtService.sign({ id, email }, { expiresIn: '1m', secret: process.env.JWT_SECRET }),
+            refresh_token: this.jwtService.sign({ id, email }, { expiresIn: '1M', secret: process.env.JWT_REFRESH_SECRET }),
         };
     }
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [users_service_1.UsersService, jwt_1.JwtService])
+    __metadata("design:paramtypes", [accounts_service_1.AccountsService, jwt_1.JwtService])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

@@ -7,10 +7,33 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Account {
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  first_name  String
+  last_name   String
+  password    String
+  is_verified Boolean   @default(false)
+  avatar      String?
+  updated_at  DateTime  @updatedAt
+  created_at  DateTime  @default(now())
+  User        User[]
+  Manager     Manager[]
+}
+
 model User {
-  id         Int    @id @default(autoincrement())
-  email      String @unique
-  first_name String
-  last_name  String
-  password   String
+  id         Int       @id @default(autoincrement())
+  job        String?
+  phone      String?
+  location   String?
+  summary    String?
+  birth_date DateTime?
+  account    Account   @relation(fields: [account_id], references: [id])
+  account_id Int
+}
+
+model Manager {
+  id         Int     @id @default(autoincrement())
+  account    Account @relation(fields: [account_id], references: [id])
+  account_id Int
 }

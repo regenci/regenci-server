@@ -14,21 +14,24 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
-const users_service_1 = require("../users/users.service");
+const accounts_service_1 = require("../accounts/accounts.service");
 const auth_service_1 = require("./auth.service");
+const jwt_refresh_auth_guard_1 = require("./jwt-refresh-auth.guard");
 const local_auth_guard_1 = require("./local-auth.guard");
 let AuthController = class AuthController {
-    constructor(userService, authService) {
-        this.userService = userService;
+    constructor(accountService, authService) {
+        this.accountService = accountService;
         this.authService = authService;
     }
     async login(req) {
-        console.log(req.user);
+        return this.authService.login(req.user);
+    }
+    async refreshToken(req) {
         return this.authService.login(req.user);
     }
     async register(req) {
-        const user = req.body;
-        await this.userService.createUser(user);
+        const account = req.body;
+        await this.accountService.createAccount(account);
         return { msg: 'Successfuly registered' };
     }
 };
@@ -41,6 +44,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_refresh_auth_guard_1.JwtRefreshAuthGuard),
+    (0, common_1.Get)('/refresh-token'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "refreshToken", null);
+__decorate([
     (0, common_1.Post)('/register'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -49,7 +60,7 @@ __decorate([
 ], AuthController.prototype, "register", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
-    __metadata("design:paramtypes", [users_service_1.UsersService, auth_service_1.AuthService])
+    __metadata("design:paramtypes", [accounts_service_1.AccountsService, auth_service_1.AuthService])
 ], AuthController);
 exports.AuthController = AuthController;
 //# sourceMappingURL=auth.controller.js.map

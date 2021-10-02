@@ -1,26 +1,27 @@
-import { User } from '.prisma/client'
+import { Account } from '.prisma/client'
 import { Injectable } from '@nestjs/common'
-import { UsersService } from '../users/users.service'
+import { AccountsService } from '../accounts/accounts.service'
 import * as argon2 from 'argon2'
 import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService, private jwtService: JwtService) {}
+  constructor(private accountService: AccountsService, private jwtService: JwtService) {}
 
-  async validateUser(email: string, pass: string): Promise<Partial<User>> {
-    const user = await this.usersService.findOne({ email })
+  async validateAccount(email: string, pass: string): Promise<Partial<Account>> {
+    const account = await this.accountService.findOne({ email })
 
-    if (!user || !argon2.verify(user.password, pass)) return null
+    if (!account || !argon2.verify(account.password, pass)) return null
 
     // extract password from result
-    const { password, ...result } = user
+    const { password, ...result } = account
     return result
   }
 
-  async login({ id, email }: User) {
+  async login({ id, email }: Account) {
     return {
-      access_token: this.jwtService.sign({ id, email }),
+      access_token: this.jwtService.sign({ id, email }, { expiresIn: '1m', secret: process.env.JWT_SECRET }),
+      refresh_token: this.jwtService.sign({ id, email }, { expiresIn: '1M', secret: process.env.JWT_REFRESH_SECRET }),
     }
   }
 }
