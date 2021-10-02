@@ -24,9 +24,12 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     async login(req) {
+<<<<<<< HEAD
         return this.authService.login(req.user);
     }
     async refreshToken(req) {
+=======
+>>>>>>> 32d254d4f7e94158ba88539b7d93dd6ac187ffd8
         return this.authService.login(req.user);
     }
     async register(req) {

@@ -1,6 +1,6 @@
 node_modules
 .env
-dist
+# dist
 yarn-lock.log
 package-lock.log
 yarn-error.log
