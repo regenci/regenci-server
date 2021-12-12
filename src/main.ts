@@ -1,7 +1,7 @@
 import { setup } from './setup'
 import { config } from './config'
+import { AppModule } from './app'
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from './components/app'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 
 async function bootstrap() {

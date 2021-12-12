@@ -14,12 +14,8 @@
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
-    "esModuleInterop": true,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@server/*": ["src/*"]
-    }
+    "noFallthroughCasesInSwitch": false
   }
 }
