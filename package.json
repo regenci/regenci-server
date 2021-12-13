@@ -11,8 +11,7 @@
     "lint": "eslint --fix .",
     "prebuild": "rimraf dist",
     "dev": "nest start --watch",
-    "format": "prettier --write .",
-    "prepare": "husky install"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@fastify/session": "^6.2.2",

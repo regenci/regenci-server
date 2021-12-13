@@ -10,7 +10,7 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException('Could not find your req.headers[authorization] token!');
     }
-    
+
     if (token !== 'MY_AUTH_TOKEN') {
       throw new UnauthorizedException('invalid token');
     }
