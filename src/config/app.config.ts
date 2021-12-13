@@ -17,7 +17,7 @@ export default () => ({
   jwt: {
     expiresIn: process.env.EXPIRES_IN,
     accessToken: process.env.ACCESS_TOKEN_SECRET,
-    refreshToken: process.env.REFRESH_TOKEN_SECRET,
+    verifyToken: process.env.VERIFY_TOKEN_SECRET,
   },
 
   cookieParser: process.env.COOKIE_PARSER_SECRET,

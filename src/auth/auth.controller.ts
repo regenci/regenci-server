@@ -2,8 +2,8 @@ import { User } from '@prisma/client';
 import { AuthUser } from './decorators';
 import { AuthService } from './auth.service';
 import { AuthGuard, LocalAuthGuard } from './guards';
-import { AuthResponse, SignInDto, SignUpDto } from './dto';
 import { Get, Post, Body, UseGuards, Controller } from '@nestjs/common';
+import { AuthResponse, SignInDto, SignUpDto, VerifyAccountDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,8 +16,13 @@ export class AuthController {
   }
 
   @Post('register')
-  register(@Body() input: SignUpDto): Promise<AuthResponse> {
+  register(@Body() input: SignUpDto): Promise<Pick<AuthResponse, 'user'>> {
     return this.authService.signUp(input);
+  }
+
+  @Post('verify')
+  verify(@Body() input: VerifyAccountDto): Promise<AuthResponse> {
+    return this.authService.verifyAccount(input);
   }
 
   @UseGuards(AuthGuard)

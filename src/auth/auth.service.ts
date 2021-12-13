@@ -1,7 +1,7 @@
 import { UserService } from '../user';
 import { JwtService } from '@nestjs/jwt';
 import { SecurityService } from './security.service';
-import { AuthResponse, SignInDto, SignUpDto } from './dto';
+import { AuthResponse, SignInDto, SignUpDto, VerifyAccountDto } from './dto';
 import { Injectable, NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
 
 @Injectable()
@@ -27,6 +27,8 @@ export class AuthService {
       throw new ForbiddenException('Incorrect password, please try again.');
     }
 
+    delete user.password;
+
     return {
       token: this.jwtService.sign({
         email_address: input.email_address,
@@ -35,7 +37,7 @@ export class AuthService {
     };
   }
 
-  async signUp(input: SignUpDto): Promise<AuthResponse> {
+  async signUp(input: SignUpDto): Promise<Pick<AuthResponse, 'user'>> {
     const { password, ...rest } = input;
     const exist = await this.userService.findUserByEmail(rest.email_address);
 
@@ -55,8 +57,32 @@ export class AuthService {
     delete user.password;
 
     return {
-      token: this.jwtService.sign({ email_address: user.email_address }),
       user,
+    };
+  }
+
+  async verifyAccount(input: VerifyAccountDto): Promise<AuthResponse> {
+    const user = await this.userService.findUserById(input.id);
+
+    if (!user) {
+      throw new NotFoundException(
+        'There is no account registered with this email address, please create one to proceed.'
+      );
+    }
+
+    const matchingCode = user.verification_code === input.code;
+    if (!matchingCode) {
+      throw new ForbiddenException('Incorrect verification code, please try again.');
+    }
+
+    const updated = await this.userService.updateUserById(input.id, {
+      is_verified: true,
+      verification_code: 1,
+    });
+
+    return {
+      token: this.jwtService.sign({ email_address: user.email_address }),
+      user: updated,
     };
   }
 }

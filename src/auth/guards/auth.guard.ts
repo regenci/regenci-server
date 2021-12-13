@@ -1,19 +1,25 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Observable } from 'rxjs';
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { verify } from 'jsonwebtoken';
+import { config } from '../../config';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const req: Request = context.switchToHttp().getRequest();
-    const token = req.headers['authorization'];
+    const authorization = req.headers['authorization'];
 
-    if (!token) {
-      throw new UnauthorizedException('Could not find your req.headers[authorization] token!');
+    if (!authorization) {
+      throw new UnauthorizedException('Could not find your authorization token!');
     }
+    const token = authorization.split(' ')[1];
 
-    if (token !== 'MY_AUTH_TOKEN') {
-      throw new UnauthorizedException('invalid token');
-    }
+    verify(token, config().jwt.accessToken, (err: { message: string }, _: any) => {
+      if (err) {
+        throw new ForbiddenException(err.message);
+      }
+    });
     return true;
   }
 }
