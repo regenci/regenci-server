@@ -27,17 +27,22 @@ export class AuthService {
       throw new ForbiddenException('Incorrect password, please try again.');
     }
 
+    if (!user.is_verified) {
+      throw new ForbiddenException('Your account is not verified, please verify it first!');
+    }
+
     delete user.password;
 
     return {
       token: this.jwtService.sign({
+        id: user.id,
         email_address: input.email_address,
       }),
       user,
     };
   }
 
-  async signUp(input: SignUpDto): Promise<Pick<AuthResponse, 'user'>> {
+  async signUp(input: SignUpDto): Promise<Pick<AuthResponse, 'token'>> {
     const { password, ...rest } = input;
     const exist = await this.userService.findUserByEmail(rest.email_address);
 
@@ -57,7 +62,10 @@ export class AuthService {
     delete user.password;
 
     return {
-      user,
+      token: this.jwtService.sign({
+        id: user.id,
+        email_address: input.email_address,
+      }),
     };
   }
 
@@ -71,6 +79,11 @@ export class AuthService {
     }
 
     const matchingCode = user.verification_code === input.code;
+
+    if (user.verification_code === 1) {
+      throw new ForbiddenException('Your account is already verified.');
+    }
+
     if (!matchingCode) {
       throw new ForbiddenException('Incorrect verification code, please try again.');
     }
@@ -79,7 +92,7 @@ export class AuthService {
       is_verified: true,
       verification_code: 1,
     });
-
+    delete updated.password;
     return {
       token: this.jwtService.sign({ email_address: user.email_address }),
       user: updated,

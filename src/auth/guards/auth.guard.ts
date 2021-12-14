@@ -20,6 +20,7 @@ export class AuthGuard implements CanActivate {
         throw new ForbiddenException(err.message);
       }
     });
+
     return true;
   }
 }

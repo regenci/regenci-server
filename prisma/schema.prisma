@@ -1,38 +1,28 @@
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  provider = "prisma-client-js"
 }
 
 model User {
-  id                String          @id @default(uuid())
+  id                String   @id @default(uuid())
   first_name        String
   last_name         String
-  email_address     String          @unique
+  email_address     String   @unique
   password          String
   verification_code Int?
   profile_picture   String?
   current_template  String?
-  used_templates    UsedTemplates[]
-  Resume            Resume?         @relation(fields: [resume_id], references: [id], onDelete: Cascade)
-  updated_at        DateTime        @updatedAt
-  created_at        DateTime        @default(now())
-  is_admin          Boolean         @default(false)
-  is_verified       Boolean         @default(false)
+  used_templates    String[]
+  Resume            Resume?  @relation(fields: [resume_id], references: [id], onDelete: Cascade)
+  updated_at        DateTime @updatedAt
+  created_at        DateTime @default(now())
+  is_admin          Boolean  @default(false)
+  is_verified       Boolean  @default(false)
   resume_id         String?
-}
-
-model UsedTemplates {
-  id           String  @id @default(uuid())
-  templated_id String
-  User         User?   @relation(fields: [user_id], references: [id])
-  user_id      String?
 }
 
 model Resume {

@@ -1,6 +1,6 @@
 import { config } from '../../config';
 import { UserService } from '../../user';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
@@ -16,6 +16,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: { email_address: string }) {
     const user = await this.userService.findUserByEmail(payload.email_address);
+    if (!user) {
+      throw new NotFoundException('Could not find any user');
+    }
 
     return user;
   }
